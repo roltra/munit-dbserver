@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dbserver="http://www.mulesoft.org/schema/mule/dbserver" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/dbserver http://www.mulesoft.org/schema/mule/dbserver/current/mule-dbserver.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration" mock-connectors="false" mock-inbounds="false"/>
+    <spring:beans>
+        <spring:import resource="classpath:munit-dbserver.xml"/>
+    </spring:beans>
+    <dbserver:config name="DB_Server_Local" csv="flights_mock.csv" database="training" connectionStringParameters="MODE=MySQL" doc:name="DB Server"/>
+    <munit:before-suite name="getAmericanFlights-test-suiteBefore_Suite" description="MUnit Test">
+        <dbserver:start-db-server config-ref="DB_Server_Local" doc:name="DB Server: Start DB Server"/>
+    </munit:before-suite>
+    <munit:test name="getAmericanFlightsTest_payloadReturnsJavaList_True" description="Calling getAmericanFlightsFlow returns payload of type Java List">
+        <flow-ref name="getAmericanFlights" doc:name="getAmerican Flights"/>
+        <munit:assert-true message="FAILED: Expected payload type to be Java List, but found #[payload.getClass().getName()] instead!!" condition="#[payload is java.util.List]" doc:name="Assert True: Payload type is java List"/>
+        <munit:assert-not-null message="FAILED:  Payload has NO rows" doc:name="Assert Not Null Payload"/>
+    </munit:test>
+    <munit:test name="getAmericanFlights-test-suiteTest" description="MUnit Test">
+        <dbserver:execute config-ref="DB_Server_Local" sql="INSERT INTO flights_mock VALUES ('Airbus 303','0001','LAX','2015-01-20T00:00:00','MUA','541','Virgin Airlines','none','rree');" doc:name="DB Server: INSERT a new flight"/>
+        <dbserver:execute-query config-ref="DB_Server_Local" sql="SELECT * FROM flights_mock" doc:name="DB Server: Execute Query"/>
+        <munit:assert-true message="FAILED: Payload has NO rows" condition="#[payload.size() &gt; 0]" doc:name="Assert True: Payload has some rows"/>
+        <munit:assert-on-equals message="FAILED: Expected payload to return 11 flights, but found #[payload.size()] flights instead" expectedValue="#[11]" actualValue="#[payload.size()]" doc:name="Assert Equals: Payload has exactly 11 rows"/>
+    </munit:test>
+    <munit:after-suite name="getAmericanFlights-test-suiteAfter_Suite" description="Ater suite actions">
+        <dbserver:stop-db-server config-ref="DB_Server_Local" doc:name="DB Server: Stop DB Server"/>
+    </munit:after-suite>
+</mule>

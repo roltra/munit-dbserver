@@ -1,0 +1,12 @@
+planeType,code2,toAirport,takeOffDate,fromAirport,price,airlineName,seatsAvailable,code1
+Boeing 787,0001,LAX,2015-01-20T00:00:00,MUA,541,American Airlines,none,rree
+Boeing 747,0123,CLE,2015-01-25T00:00:00,MUA,300,American Airlines,7,rree
+Boeing 777,0192,LAX,2015-01-20T00:00:00,MUA,300,American Airlines,none,rree
+Boeing 737,1000,CLE,2015-01-20T00:00:00,MUA,200,American Airlines,5,rree
+Boeing 737,1093,SFO,2015-02-11T00:00:00,MUA,142,American Airlines,1,rree
+Boeing 787,1112,CLE,2015-01-20T00:00:00,MUA,954,American Airlines,100,rree
+Boeing 777,1994,SFO,2015-01-01T00:00:00,MUA,676,American Airlines,none,rree
+Boeing 737,2000,SFO,2015-02-20T00:00:00,MUA,300,American Airlines,30,rree
+Boeing 737,3000,SFO,2015-02-01T00:00:00,MUA,900,American Airlines,none,rree
+Boeing 777,4511,LAX,2015-01-15T00:00:00,MUA,900,American Airlines,100,rree
+Boeing 737,4567,SFO,2015-01-20T00:00:00,MUA,456,American Airlines,100,rree
